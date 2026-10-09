@@ -7,9 +7,11 @@ DirectoryIndex index.html index.php
 RewriteEngine On
 
 # 1) Force HTTPS and the non-www host (one canonical address)
-RewriteCond %{HTTPS} off [OR]
-RewriteCond %{HTTP_HOST} ^www\. [NC]
-RewriteRule ^(.*)$ https://fgirenonv.com/$1 [R=301,L]
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 
 # 2) Old WordPress URLs -> new pages (keeps existing Google rankings)
 RewriteRule ^auto-insurance/?$ /services/auto-insurance/ [R=301,L]

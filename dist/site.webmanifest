@@ -1,0 +1,20 @@
+{
+  "name": "Feel Good Insurance",
+  "short_name": "FGI",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f3ec",
+  "theme_color": "#0e0e0c",
+  "icons": [
+    {
+      "src": "/assets/img/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/img/fgi-logo-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
