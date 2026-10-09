@@ -1,0 +1,108 @@
+/* =========================================================
+   3D service-area experience
+   ========================================================= */
+.a3d-section { overflow: hidden; }
+.a3d-section::after { content: ''; position: absolute; inset: auto -10% -30% -10%; height: 60%; background: radial-gradient(closest-side, rgba(199, 162, 90, .12), transparent); pointer-events: none; z-index: 0; }
+.a3d { position: relative; display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 18px; }
+.a3d-compact { grid-template-columns: minmax(0, 1fr); }
+.a3d > * { min-width: 0; }
+
+/* stage */
+.a3d-stage { position: relative; height: clamp(520px, 72vh, 720px); border-radius: 30px; overflow: hidden; background: radial-gradient(120% 90% at 50% 20%, #1c1913 0%, #0d0c0a 60%, #080807 100%); box-shadow: 0 0 0 1px rgba(226, 200, 143, .16), 0 40px 90px -30px rgba(0, 0, 0, .8); isolation: isolate; touch-action: pan-y; }
+.a3d-compact .a3d-stage { height: clamp(460px, 62vh, 600px); }
+.a3d-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: grab; opacity: 0; transition: opacity 1.2s var(--ease); }
+.a3d-canvas:active { cursor: grabbing; }
+.a3d-ready .a3d-canvas { opacity: 1; }
+.a3d-stage::before { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: inherit; box-shadow: inset 0 0 120px 30px rgba(8, 8, 7, .85); }
+.a3d-stage::after { content: ''; position: absolute; inset: 14px; z-index: 2; pointer-events: none; border-radius: 20px; border: 1px solid rgba(226, 200, 143, .1); }
+
+/* labels projected from 3D */
+.a3d-labels { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.a3d-label { position: absolute; left: 0; top: 0; pointer-events: auto; padding: 5px 10px; border-radius: 999px; background: rgba(14, 13, 11, .72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); box-shadow: inset 0 0 0 1px rgba(226, 200, 143, .28); color: #e9e3d8; font: 600 12px/1 var(--sans); letter-spacing: .01em; white-space: nowrap; opacity: 0; transition: opacity .4s, background-color .3s, color .3s, box-shadow .3s, padding .3s; will-change: transform; cursor: pointer; }
+.a3d-label.hq { background: rgba(199, 162, 90, .92); color: var(--ink); font-weight: 800; box-shadow: 0 6px 18px -4px rgba(199, 162, 90, .6); }
+.a3d-label.hover, .a3d-label.active { background: #fff; color: var(--ink); box-shadow: 0 8px 24px -6px rgba(226, 200, 143, .8), inset 0 0 0 1px var(--gold); padding: 7px 13px; }
+
+/* fallback / loader */
+.a3d-fallback { position: absolute; inset: 0; transition: opacity 1s var(--ease), visibility 0s 1s; }
+.a3d-ready .a3d-fallback { opacity: 0; visibility: hidden; }
+.a3d-fallback .map-card { height: 100%; border-radius: 0; aspect-ratio: auto; box-shadow: none; clip-path: none; }
+.a3d-nogl .a3d-fallback { opacity: 1; visibility: visible; }
+.a3d-loader, .no-js .a3d-loader, .a3d-nogl .a3d-loader, .a3d-ready .a3d-loader, .no-js .a3d-controls, .a3d-nogl .a3d-controls, .no-js .a3d-hint, .a3d-nogl .a3d-hint { display: none; }
+.a3d-loader { position: absolute; inset: 0; z-index: 4; display: grid; place-content: center; justify-items: center; gap: 14px; color: #a9a193; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.a3d-loader i { width: 34px; height: 34px; transform: rotate(45deg); border: 1.5px solid var(--gold); animation: a3dSpin 1.4s var(--ease) infinite; }
+@keyframes a3dSpin { 0% { transform: rotate(45deg) scale(.8); opacity: .4; } 50% { transform: rotate(225deg) scale(1); opacity: 1; } 100% { transform: rotate(405deg) scale(.8); opacity: .4; } }
+
+/* hint + controls */
+.a3d-hint { position: absolute; left: 22px; top: 22px; z-index: 4; display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: rgba(14, 13, 11, .6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); color: #cfc7b9; font-size: 12.5px; font-weight: 600; transition: opacity .6s, transform .6s var(--ease); }
+.a3d-hint .ico { width: 16px; height: 16px; color: var(--gold-2); animation: a3dRock 3s ease-in-out infinite; }
+@keyframes a3dRock { 50% { transform: rotate(40deg); } }
+.a3d-touched .a3d-hint { opacity: 0; transform: translateY(-10px); pointer-events: none; }
+.a3d-controls { position: absolute; right: 18px; top: 50%; z-index: 4; transform: translateY(-50%); display: grid; gap: 6px; padding: 6px; border-radius: 18px; background: rgba(14, 13, 11, .62); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1px rgba(226, 200, 143, .18); }
+.a3d-controls button { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; color: #e9e3d8; transition: background-color .25s, color .25s, transform .3s var(--ease); }
+.a3d-controls button:hover { background: var(--gold); color: var(--ink); transform: scale(1.06); }
+.a3d-controls button.off { color: #7d776b; }
+.a3d-controls .ico { width: 18px; height: 18px; }
+
+/* detail card */
+.a3d-card { position: absolute; left: 22px; bottom: 22px; z-index: 4; width: min(390px, calc(100% - 44px)); padding: 20px 22px; border-radius: 22px; background: rgba(255, 253, 249, .95); box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .7), inset 0 0 0 1px rgba(199, 162, 90, .35); display: grid; gap: 4px; color: var(--text); }
+.a3d-card.swap { animation: a3dCard .6s var(--ease); }
+@keyframes a3dCard { from { opacity: 0; transform: translateY(12px) scale(.98); } }
+.a3d-card-county { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-deep); }
+.a3d-card-name { font-family: var(--serif); font-size: 28px; font-weight: 400; line-height: 1.1; color: var(--ink); letter-spacing: -.02em; }
+.a3d-card-info { font-size: 14px; color: var(--muted); }
+.a3d-card-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.a3d-card-actions .btn { white-space: nowrap; }
+.a3d .a3d-card .btn.ghost { --fg: var(--ink); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--line); }
+
+/* side panel */
+.a3d-panel { display: flex; flex-direction: column; gap: 12px; min-height: 0; height: clamp(520px, 72vh, 720px); padding: 16px; border-radius: 30px; background: rgba(255, 255, 255, .04); box-shadow: inset 0 0 0 1px rgba(226, 200, 143, .14); }
+.a3d-search { position: relative; display: block; flex: none; }
+.a3d-search .ico { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--gold-2); }
+.a3d-search input { width: 100%; height: 48px; border-radius: 14px; border: 0; padding: 0 14px 0 42px; background: rgba(255, 255, 255, .07); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12); color: #fff; font-size: 15px; outline: none; transition: box-shadow .25s, background-color .25s; }
+.a3d-search input::placeholder { color: #8f887b; }
+.a3d-search input:focus { box-shadow: inset 0 0 0 1.5px var(--gold); background: rgba(255, 255, 255, .1); }
+.a3d-list { overflow-y: auto; flex: 1; margin-right: -8px; padding-right: 8px; scrollbar-width: thin; scrollbar-color: rgba(226, 200, 143, .3) transparent; }
+.a3d-group + .a3d-group { margin-top: 14px; }
+.a3d-county { margin: 4px 8px 8px; font-size: 11px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-2); }
+.a3d-item { position: relative; display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 14px; color: #e9e3d8; transition: background-color .3s, transform .4s var(--ease); }
+.a3d-item::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 10px; width: 2px; border-radius: 2px; background: var(--gold); transform: scaleY(0); transition: transform .4s var(--ease); }
+.a3d-item:hover, .a3d-item:focus-visible { background: rgba(255, 255, 255, .06); transform: translateX(3px); }
+.a3d-item.active { background: rgba(199, 162, 90, .14); }
+.a3d-item.active::before { transform: scaleY(1); }
+.a3d-dot { position: relative; width: 10px; height: 10px; border-radius: 50%; background: var(--gold); flex: none; box-shadow: 0 0 0 4px rgba(199, 162, 90, .15); }
+.a3d-dot.hq { width: 12px; height: 12px; background: var(--gold-2); box-shadow: 0 0 0 5px rgba(226, 200, 143, .25); }
+.a3d-item.active .a3d-dot::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 1.5px solid var(--gold); animation: a3dPing 1.4s ease-out infinite; }
+@keyframes a3dPing { from { transform: scale(.6); opacity: 1; } to { transform: scale(1.8); opacity: 0; } }
+.a3d-item-text { display: grid; min-width: 0; }
+.a3d-item-text b { font-size: 15px; font-weight: 700; color: #fff; }
+.a3d-item-text small { font-size: 12.5px; color: #8f887b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.a3d-go { width: 18px; height: 18px; margin-left: auto; color: #6f695e; transition: transform .4s var(--ease), color .3s; flex: none; }
+.a3d-item:hover .a3d-go, .a3d-item.active .a3d-go { color: var(--gold-2); transform: translate(2px, -2px); }
+
+.dark-pill { background: rgba(255, 255, 255, .05); color: #e9e3d8; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12); }
+.dark-pill .ico { color: var(--gold-2); }
+.dark-pill:hover { background: var(--gold); color: var(--ink); box-shadow: none; }
+.dark-pill:hover .ico { color: var(--ink); }
+
+@media (max-width: 1024px) {
+  .a3d { grid-template-columns: minmax(0, 1fr); }
+  .a3d-panel { order: 2; height: auto; max-height: none; padding: 12px; min-width: 0; }
+  .a3d-list { display: flex; gap: 8px; overflow-x: auto; overflow-y: hidden; margin: 0; padding: 2px 0 8px; scroll-snap-type: x mandatory; }
+  .a3d-group { display: contents; }
+  .a3d-county { display: none; }
+  .a3d-item { flex: none; scroll-snap-align: start; background: rgba(255, 255, 255, .05); padding: 10px 14px; }
+  .a3d-item-text small { display: none; }
+  .a3d-go { display: none; }
+}
+@media (max-width: 640px) {
+  .a3d-stage, .a3d-compact .a3d-stage { height: 560px; border-radius: 22px; }
+  .a3d-card { left: 12px; right: 12px; bottom: 12px; width: auto; padding: 16px 18px; }
+  .a3d-card-name { font-size: 23px; }
+  .a3d-controls { top: 16px; right: 12px; transform: none; grid-auto-flow: row; }
+  .a3d-hint { top: 16px; left: 12px; font-size: 12px; }
+  .a3d-label { font-size: 11px; padding: 4px 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .a3d-hint .ico, .a3d-loader i { animation: none; } }
+
+/* the 2D placeholder stays still (the 3D scene provides the motion) */
+.a3d-fallback .map-svg *, .a3d-fallback .map-card::after { animation: none !important; }

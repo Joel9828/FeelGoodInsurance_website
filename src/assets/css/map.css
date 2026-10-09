@@ -1,0 +1,77 @@
+/* =========================================================
+   Interactive service-area map
+   ========================================================= */
+.map-card { --mx: 52%; --my: 48%; }
+.map-card::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(380px circle at var(--mx) var(--my), rgba(226, 200, 143, .14), transparent 60%); transition: opacity .4s; }
+
+/* rings + radar sweep around the office */
+.map-svg .rings circle { fill: none; stroke: rgba(226, 200, 143, .1); stroke-dasharray: 2 6; transform-box: fill-box; transform-origin: center; transform: scale(.2); opacity: 0; transition: transform 1.4s var(--ease), opacity 1s; transition-delay: calc(var(--i) * .18s + .2s); }
+.map-card.in .rings circle { transform: none; opacity: 1; }
+.map-svg .sweep { transform-box: view-box; transform-origin: 238px 222px; opacity: 0; transition: opacity 1.2s .8s; animation: sweep 7s linear infinite; pointer-events: none; }
+.map-card.in .sweep { opacity: 1; }
+@keyframes sweep { to { transform: rotate(360deg); } }
+
+/* animated I-80 traffic */
+.map-svg .hwy-flow { stroke: rgba(226, 200, 143, .55); stroke-width: 2; stroke-dasharray: 3 16; stroke-linecap: round; animation: hwyFlow 2.4s linear infinite; }
+@keyframes hwyFlow { to { stroke-dashoffset: -38; } }
+.map-svg .ridge-line, .map-svg .border { stroke-dasharray: 900; stroke-dashoffset: 900; transition: stroke-dashoffset 2.6s var(--ease) .1s; }
+.map-svg .border { stroke-dasharray: 4 6; stroke-dashoffset: 0; opacity: 0; transition: opacity 1.4s .3s; }
+.map-card.in .ridge-line { stroke-dashoffset: 0; }
+.map-card.in .border { opacity: 1; }
+.map-svg .lake { transform-box: fill-box; transform-origin: center; animation: lake 6s ease-in-out infinite; }
+@keyframes lake { 50% { transform: scale(1.04); opacity: .85; } }
+
+/* routes from the office to each area */
+.map-svg .route { fill: none; stroke: rgba(226, 200, 143, .32); stroke-width: 1.1; stroke-linecap: round; stroke-dasharray: var(--len); stroke-dashoffset: var(--len); transition: stroke-dashoffset 1.3s var(--ease), opacity .4s, stroke .3s, stroke-width .3s; transition-delay: var(--d), 0s, 0s, 0s; }
+.map-card.in .route { stroke-dashoffset: 0; }
+.map-card.has-hl .route { opacity: .12; transition-delay: 0s; }
+.map-card .route.hl { opacity: 1; stroke: #f3dfa8; stroke-width: 2; stroke-dasharray: 5 7; animation: routeFlow .9s linear infinite; }
+@keyframes routeFlow { to { stroke-dashoffset: -24; } }
+
+/* pins */
+.map-svg .pin { cursor: pointer; outline: none; }
+.map-svg .pin > * { transform-box: fill-box; transform-origin: center; }
+.map-svg .pin .dot { fill: var(--gold); transform: scale(0); transition: transform .7s cubic-bezier(.34, 1.56, .64, 1), fill .3s; transition-delay: var(--d), 0s; }
+.map-svg .pin text { opacity: 0; transform: translateY(6px); transition: opacity .6s, transform .7s var(--ease), fill .3s; transition-delay: calc(var(--d) + .15s), calc(var(--d) + .15s), 0s; }
+.map-card.in .pin .dot { transform: none; }
+.map-card.in .pin text { opacity: 1; transform: none; }
+.map-svg .pin .halo { fill: var(--gold); opacity: 0; transform: scale(.3); transition: opacity .35s, transform .5s var(--ease); }
+.map-svg .pin:hover .halo, .map-svg .pin:focus-visible .halo, .map-svg .pin.hl .halo { opacity: .22; transform: scale(1); }
+.map-svg .pin:hover .dot, .map-svg .pin:focus-visible .dot, .map-svg .pin.hl .dot { fill: #fff; transform: scale(1.35); transition-delay: 0s; }
+.map-svg .pin:hover text, .map-svg .pin:focus-visible text, .map-svg .pin.hl text { fill: #fff; font-weight: 800; transition-delay: 0s; }
+.map-card.has-hl .pin:not(.hl) { opacity: .45; transition: opacity .3s; }
+.map-svg .pin .dot { animation: twinkle 4s ease-in-out infinite; animation-delay: var(--d); }
+@keyframes twinkle { 0%, 100% { filter: none; } 50% { filter: drop-shadow(0 0 4px rgba(226, 200, 143, .9)); } }
+.map-svg .pulse.p2 { animation-delay: 1.2s; }
+
+/* floating info card */
+.map-tip { position: absolute; z-index: 3; left: 50%; top: 50%; min-width: 190px; padding: 12px 14px 11px; border-radius: 14px; background: rgba(255, 253, 249, .96); color: var(--text); box-shadow: 0 20px 40px -12px rgba(0, 0, 0, .55), 0 0 0 1px rgba(199, 162, 90, .4); pointer-events: none; opacity: 0; transform: translate(-50%, calc(-100% - 18px)) scale(.92); transform-origin: 50% 100%; transition: opacity .25s, transform .45s var(--ease), left .45s var(--ease), top .45s var(--ease); display: grid; gap: 2px; }
+.map-tip::after { content: ''; position: absolute; left: 50%; bottom: -6px; width: 12px; height: 12px; margin-left: -6px; background: inherit; transform: rotate(45deg); box-shadow: 1px 1px 0 rgba(199, 162, 90, .4); }
+.map-tip.below { transform: translate(-50%, 18px) scale(.92); transform-origin: 50% 0; }
+.map-tip.below::after { top: -6px; bottom: auto; box-shadow: -1px -1px 0 rgba(199, 162, 90, .4); }
+.map-tip.show { opacity: 1; transform: translate(-50%, calc(-100% - 18px)); pointer-events: auto; }
+.map-tip.below.show { transform: translate(-50%, 18px); }
+.map-tip b { font-family: var(--serif); font-size: 18px; font-weight: 500; color: var(--ink); line-height: 1.2; }
+.map-tip .tip-county { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 800; color: var(--gold-deep); }
+.map-tip .tip-info { font-size: 13px; color: var(--muted); }
+.map-tip .tip-go { margin-top: 6px; font-size: 12.5px; font-weight: 800; color: var(--ink); }
+
+/* legend */
+.map-legend { position: absolute; left: 16px; right: 16px; bottom: 14px; z-index: 2; display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; font-size: 11.5px; font-weight: 600; color: #a9a193; pointer-events: none; }
+.map-legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--gold); margin-right: 6px; vertical-align: 0; }
+.map-legend .lg-hq { width: 12px; height: 12px; box-shadow: 0 0 0 4px rgba(199, 162, 90, .25); }
+.map-legend .lg-hint { margin-left: auto; color: #8f887b; font-style: italic; font-weight: 500; }
+
+/* list cards & pills synced with the map */
+.svc-link[data-area], .area-pill[data-area] { transition: box-shadow .35s var(--ease), transform .45s var(--ease), background-color .3s, color .3s; }
+.svc-link[data-area].hl { transform: translateY(-3px); box-shadow: 0 0 0 1.5px var(--gold), 0 14px 30px -14px rgba(138, 106, 43, .45); background: #fff; }
+.svc-link[data-area].hl .ico-wrap { background: var(--ink); color: var(--gold-2); }
+.svc-link[data-area] .ico-wrap { transition: background-color .3s, color .3s; }
+.svc-link[data-area]:hover .ico-wrap .ico, .svc-link[data-area].hl .ico-wrap .ico, .area-pill:hover .ico { animation: pinBounce .7s var(--ease); }
+@keyframes pinBounce { 0% { transform: translateY(0); } 30% { transform: translateY(-5px); } 55% { transform: translateY(0); } 75% { transform: translateY(-2px); } 100% { transform: translateY(0); } }
+.svc-link[data-area].hl .arrow { transform: translateX(5px); color: var(--ink); }
+
+@media (prefers-reduced-motion: reduce) {
+  .map-svg .sweep, .map-svg .hwy-flow, .map-svg .lake, .map-svg .pin .dot, .map-card .route.hl { animation: none !important; }
+}
+@media (hover: none) { .map-legend .lg-hint { display: none; } }
