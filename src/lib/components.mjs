@@ -226,7 +226,7 @@ export function areasSection(lang, { title, lead, eyebrow } = {}) {
   return `
 <section class="section dark a3d-section" id="areas">
   <div class="container">
-    <div class="section-head row"><div><p class="eyebrow">${eyebrow || t('areas', lang)}</p><h2 class="h2 split-words">${title || (lang === 'es' ? 'Con base en Sparks. <em>Al servicio de todo Nevada.</em>' : 'Based in Sparks. <em>Serving all of Nevada.</em>')}</h2><p class="lead">${lead || (lang === 'es' ? 'Explore el norte de Nevada en 3D: gire el mapa, pase el cursor por una ciudad y vea cómo llegamos a usted desde nuestra oficina en Sparks.' : 'Explore Northern Nevada in 3D — spin the map, hover a town and see how we reach you from our Sparks office.')}</p></div><a class="link-arrow" href="${ROUTES.areas[lang]}">${t('allAreas', lang)} ${icon('arrow')}</a></div>
+    <div class="section-head row"><div><p class="eyebrow">${eyebrow || t('areas', lang)}</p><h2 class="h2 split-words">${title || (lang === 'es' ? 'Con base en Sparks. <em>Al servicio de todo Nevada.</em>' : 'Based in Sparks. <em>Serving all of Nevada.</em>')}</h2>${lead ? `<p class="lead">${lead}</p>` : ''}</div><a class="link-arrow" href="${ROUTES.areas[lang]}">${t('allAreas', lang)} ${icon('arrow')}</a></div>
     ${areas3d(lang)}
   </div>
 </section>`;
