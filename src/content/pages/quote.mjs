@@ -101,10 +101,10 @@ export default function quote(lang) {
       <div class="card" style="padding:24px">
         <b style="display:block;color:var(--ink);margin-bottom:10px">${x('Prefer an instant online quote?', '¿Prefiere cotizar en línea al instante?')}</b>
         <div class="stack" style="--stack:8px">
-          <a class="link-arrow" href="${SITE.partners.autoHome}" target="_blank" rel="noopener">${x('Auto & home', 'Auto y casa')} ${icon('external')}</a><br>
-          <a class="link-arrow" href="${SITE.partners.business}" target="_blank" rel="noopener">${x('Small business', 'Pequeño negocio')} ${icon('external')}</a><br>
-          <a class="link-arrow" href="${SITE.partners.renters}" target="_blank" rel="noopener">${x('Renters', 'Inquilinos')} ${icon('external')}</a><br>
-          <a class="link-arrow" href="${SITE.partners.travel}" target="_blank" rel="noopener">${x('Travel', 'Viaje')} ${icon('external')}</a>
+          <a class="link-arrow" href="${SITE.partners.autoHome}" target="_blank" rel="noopener" data-partner>${x('Auto & home', 'Auto y casa')} ${icon('external')}</a><br>
+          <a class="link-arrow" href="${SITE.partners.business}" target="_blank" rel="noopener" data-partner>${x('Small business', 'Pequeño negocio')} ${icon('external')}</a><br>
+          <a class="link-arrow" href="${SITE.partners.renters}" target="_blank" rel="noopener" data-partner>${x('Renters', 'Inquilinos')} ${icon('external')}</a><br>
+          <a class="link-arrow" href="${SITE.partners.travel}" target="_blank" rel="noopener" data-partner>${x('Travel', 'Viaje')} ${icon('external')}</a>
         </div>
       </div>
     </aside>

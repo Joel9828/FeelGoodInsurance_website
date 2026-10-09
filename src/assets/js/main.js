@@ -291,6 +291,7 @@
       const out = await res.json().catch(() => ({}));
       if (!res.ok || !out.ok) throw new Error(out.error || 'fail');
       window.gtag?.('event', 'generate_lead', { form: form.dataset.form || 'contact' });
+      if (form.dataset.form === 'quote') window.gtag?.('event', 'quote_submitted');
       return true;
     } catch (err) {
       if (status) { status.className = 'form-status err'; status.innerHTML = `${I.errSend} <a class="text-link" href="tel:${I.phoneIntl}">${I.phone}</a>`; }
@@ -323,10 +324,20 @@
     if (pre) pre.split(',').forEach((v) => { const c = $(`input[name="coverage[]"][value="${v}"]`, form); if (c) c.checked = true; });
     const syncDetails = () => { const sel = $$('input[name="coverage[]"]:checked', form).map((c) => c.value); $$('.detail-group', form).forEach((g) => g.classList.toggle('show', g.dataset.for.split(' ').some((x) => sel.includes(x)))); $('.no-details', form)?.classList.toggle('show', !$$('.detail-group.show', form).length); };
     form.addEventListener('change', syncDetails); syncDetails();
+    // Funnel events (never send form values)
+    let started = false;
+    form.addEventListener('change', (e) => {
+      if (!started) { started = true; window.gtag?.('event', 'quote_started'); }
+      if (e.target.name === 'coverage[]' && e.target.checked) window.gtag?.('event', 'coverage_selected', { coverage: e.target.value });
+    });
+    const live = d.createElement('p'); live.className = 'sr-only'; live.setAttribute('aria-live', 'polite'); wiz.append(live);
     const go = (n) => {
       steps[cur].classList.remove('active'); cur = n; steps[cur].classList.add('active');
       bars.forEach((b, i) => b.classList.toggle('done', i <= cur));
       $('.wizard-count', wiz) && ($('.wizard-count', wiz).textContent = `${cur + 1} / ${steps.length}`);
+      const h = $('h2', steps[cur]); live.textContent = `${$('.step-label', steps[cur])?.textContent || ''}: ${h?.textContent || ''}`;
+      if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); }
+      if (cur === 2) window.gtag?.('event', 'quote_details_completed');
       wiz.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
     };
     $$('[data-next]', wiz).forEach((b) => b.addEventListener('click', () => {
@@ -438,7 +449,9 @@
 
   /* Rotating words in the hero */
   $$('.rot').forEach((rot) => {
-    const words = $$('i', rot); if (words.length < 2 || reduce) return;
+    if (reduce || !rot.dataset.words) return;
+    rot.insertAdjacentHTML('beforeend', rot.dataset.words.split('|').map((w) => `<i aria-hidden="true">${w}</i>`).join(''));
+    const words = $$('i', rot);
     let i = 0;
     setInterval(() => {
       if (d.hidden) return;
@@ -469,9 +482,10 @@
     addEventListener('load', () => setTimeout(() => (window.requestIdleCallback || setTimeout)(load), 15000));
     d.addEventListener('click', (e) => {
       const a = e.target.closest('a'); if (!a) return;
-      if (a.href.startsWith('tel:')) window.gtag?.('event', 'click_call');
+      if (a.href.startsWith('tel:')) { window.gtag?.('event', 'click_call'); window.gtag?.('event', 'phone_clicked'); }
       else if (a.href.startsWith('sms:')) window.gtag?.('event', 'click_text');
       else if (a.href.startsWith('mailto:')) window.gtag?.('event', 'click_email');
+      else if (a.hasAttribute('data-partner')) window.gtag?.('event', 'external_quote_clicked', { link_domain: a.host });
     });
   }
 })();

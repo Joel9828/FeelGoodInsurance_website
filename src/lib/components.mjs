@@ -304,16 +304,16 @@ export function consents(lang, id) {
   const es = lang === 'es';
   return `
   <label class="consent"><input type="checkbox" name="sms_consent" value="yes"><span>${es
-    ? `Acepto recibir mensajes de texto de marketing, como recordatorios de citas y ofertas, de Feel Good Insurance LLC al número que proporcioné, incluso mediante marcador automático. Entiendo que mi consentimiento no es condición de compra. Pueden aplicarse tarifas de mensajes y datos. La frecuencia varía. Responda HELP para ayuda o STOP para cancelar. <a href="${ROUTES.privacy.es}">Política de Privacidad</a> y <a href="${ROUTES.terms.es}">Términos</a>.`
-    : `I consent to receive marketing text messages, such as appointment requests and sales reminders, from Feel Good Insurance LLC at the phone number I provided, including messages sent via auto dialer. I understand that my consent is not a condition of purchase. Msg &amp; data rates may apply. Msg frequency varies. Reply HELP for assistance or STOP to opt out of receiving messages. <a href="${ROUTES.privacy.en}">Privacy Policy</a> &amp; <a href="${ROUTES.terms.en}">Terms</a> (where applicable).`}</span></label>
-  <label class="consent"><input type="checkbox" name="email_consent" value="yes"><span>${es ? 'Acepto recibir correos electrónicos y llamadas de marketing.' : 'I consent to receive marketing emails and phone communications.'}</span></label>`;
+    ? `Acepto recibir mensajes de texto de marketing, como recordatorios de citas, seguimiento de cotizaciones y ofertas, de Feel Good Insurance LLC al número que proporcioné, incluso mediante marcador automático. Entiendo que mi consentimiento no es condición de compra. Pueden aplicarse tarifas de mensajes y datos. La frecuencia varía (hasta 5 mensajes por semana). Responda HELP para ayuda o STOP para cancelar. <a href="${ROUTES.privacy.es}">Política de Privacidad</a> y <a href="${ROUTES.terms.es}">Términos</a>.`
+    : `I consent to receive marketing text messages, such as appointment reminders, quote follow-ups and offers, from Feel Good Insurance LLC at the phone number I provided, including messages sent via auto dialer. I understand that my consent is not a condition of purchase. Msg &amp; data rates may apply. Msg frequency varies (up to 5 msgs/week). Reply HELP for assistance or STOP to opt out of receiving messages. <a href="${ROUTES.privacy.en}">Privacy Policy</a> &amp; <a href="${ROUTES.terms.en}">Terms</a> (where applicable).`}</span></label>
+  <label class="consent"><input type="checkbox" name="email_consent" value="yes"><span>${es ? 'Opcional: acepto recibir correos y llamadas de marketing. No es necesario para solicitar una cotización.' : 'Optional: I consent to receive marketing emails and phone calls. Not required to request a quote.'}</span></label>`;
 }
 
 /* Online quote partner buttons */
 export function partnerQuote(lang, key) {
   const url = SITE.partners[key];
   if (!url) return '';
-  return `<a class="btn ghost lg" href="${url}" target="_blank" rel="noopener">${t('onlineQuote', lang)} ${icon('external')}</a>`;
+  return `<a class="btn ghost lg" href="${url}" target="_blank" rel="noopener" data-partner>${t('onlineQuote', lang)} ${icon('external')}</a>`;
 }
 
 /* Blog cards */

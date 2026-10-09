@@ -49,7 +49,7 @@ export default function home(lang) {
     <p class="pill-note glass fade-up" style="--d:.15s"><span class="dot-ico">${icon('diamond')}</span>${x('Independent insurance agency · Sparks, Nevada', 'Agencia de seguros independiente · Sparks, Nevada')}</p>
     <h1 class="display hero-title">${x('Insurance in Sparks, NV that lets you <em>feel good.</em>', 'Seguros en Sparks, NV que le hacen <em>sentir bien.</em>')}</h1>
     <p class="lead fade-up" style="--d:.5s">${x('Auto, home, life and business coverage from local agents who compare multiple carriers, explain every option in plain language — and handle your DMV and notary paperwork under the same roof.', 'Seguros de auto, casa, vida y negocio con agentes locales que comparan varias aseguradoras, le explican cada opción con claridad — y atienden sus trámites del DMV y notaría en el mismo lugar.')}</p>
-    <p class="rotator fade-up" style="--d:.58s"><span>${x('Protecting your', 'Protegiendo su')}</span> <span class="rot" aria-hidden="true">${(es ? ['auto', 'hogar', 'familia', 'negocio', 'moto', 'viaje'] : ['car', 'home', 'family', 'business', 'ride', 'trip']).map((w, i) => `<i${i === 0 ? ' class="on"' : ''}>${w}</i>`).join('')}</span><span class="sr-only">${es ? 'auto, hogar, familia, negocio, moto y viaje' : 'car, home, family, business, ride and trip'}</span></p>
+    <p class="rotator fade-up" style="--d:.58s"><span>${x('Protecting your', 'Protegiendo su')}</span> <span class="rot" data-words="${es ? 'hogar|familia|negocio|moto|viaje' : 'home|family|business|ride|trip'}"><i class="on">${es ? 'auto' : 'car'}</i></span></p>
     <div class="btn-row fade-up" style="--d:.65s">${btnQuote(lang)}${btnCall(lang)}</div>
   </div>
   <figure class="cover-review fade-up" style="--d:1.1s">

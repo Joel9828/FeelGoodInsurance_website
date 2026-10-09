@@ -124,12 +124,12 @@ export const TEAM = [
 
 // ---------- Google reviews (verbatim, shown in original language) ----------
 export const REVIEWS = [
-  { name: 'Erika Lua', lang: 'en', text: 'Christian was great! I was able to get my title expedited fast!!!! I recieved it in 3 business days! Very happy with his services I would recommend this office they are very knowledgeable.' },
+  { name: 'Erika Lua', lang: 'en', text: 'Christian was great! I was able to get my title expedited fast!!!! I received it in 3 business days! Very happy with his services I would recommend this office they are very knowledgeable.' },
   { name: 'Ricardo Barrientos', lang: 'es', text: 'Tramite bastante rápido, hacen toda la gestión por ti, solicité registro en NV para el coche, también seguro de auto. Super recomendados!' },
   { name: 'Nicholas', lang: 'en', text: 'Great service! Really nice people! Super fast and convenient!' },
   { name: 'Astrid Ofelia Guerrero Coronado', lang: 'es', text: 'Excelente servicio y amabilidad de todas y cada una de las personas que laboran allí. Gracias por todo. Mil bendiciones' },
   { name: 'Manuel Jacobo', lang: 'en', text: 'Chris was very helpful and nice thank you great service.' },
-  { name: 'Mario Israel Picazo-Cuevas', lang: 'en', text: 'nice fast and eficient !! thank you guys !!!' },
+  { name: 'Mario Israel Picazo-Cuevas', lang: 'en', text: 'nice fast and efficient !! thank you guys !!!' },
 ];
 
 // ---------- Carrier partners (logos from the old website) ----------

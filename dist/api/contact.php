@@ -94,8 +94,9 @@ if (SAVE_COPY) {
   $dir = __DIR__ . '/leads';
   if (!is_dir($dir)) { @mkdir($dir, 0750); @file_put_contents("$dir/.htaccess", "Require all denied\nDeny from all\n"); }
   $fh = @fopen("$dir/leads-" . date('Y-m') . '.csv', 'a');
-  if ($fh) { fputcsv($fh, $csv); fclose($fh); }
+  if ($fh) { $saved = fputcsv($fh, $csv) !== false; fclose($fh); }
 }
 
-if (!$sent && !SAVE_COPY) out(false, 'mail', 500);
+// Only report success when the lead was actually emailed or stored
+if (!$sent && empty($saved)) out(false, 'mail', 500);
 out(true);
